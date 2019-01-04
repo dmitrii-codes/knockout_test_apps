@@ -9,8 +9,7 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
 </head>
-<body>
-
+<body onload="getGoals()">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <a class="navbar-brand" href="#">Goal Tracker</a>
     </nav>
@@ -18,18 +17,19 @@
     <div class="container">
         <div class="row">
             <div class="col-md-3">
-                <input type="text" id="name" class="form-control" placeholder="Enter new goal">
+                <input data-bind="value: goalInputName, valueUpdate: 'keypress'"type="text" id="name" class="form-control" placeholder="Enter new goal">
             </div>
             <div class="col-md-3">
-                <select id="type" class="form-control">
+                <select data-bind="value: goalInputType, options: types, optionsCaption: 'Choose type'"id="type" class="form-control">
                 </select>
             </div>
             <div class="col-md-3">
-                <input type="date" id="deadline" class="form-control">
+                <input data-bind="value: goalInputDeadline"type="date" id="deadline" class="form-control">
             </div>
             <div class="col-md-3">
-                <button class="btn btn-primary">Add Goal</button>
-                <button class="btn btn-danger">Delete</button>
+                <button class="btn btn-primary" data-bind="click: addGoal, enable: goalInputName, visible: !isUpdate()">Add Goal</button>
+                <button class="btn btn-danger" data-bind="enable: deleteEnabled, click: deleteSelected, visible: !isUpdate()">Delete</button>
+                <button class="btn btn-primary" data-bind="visible: isUpdate, click: saveGoal">Save</button>
             </div>
         </div>
         <br><br>
@@ -44,12 +44,13 @@
                             <th>Deadline</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody data-bind="foreach: goals">
                         <tr>
-                            <td><input type="checkbox"></td>
-                            <td>NAME</td>
-                            <td>TYPE</td>
-                            <td>DEADLINE</td>
+                            <td><input type="checkbox" data-bind="value: $data, checked: $parent.selectedGoals"></td>
+                            <td data-bind="text: name"></td>
+                            <td data-bind="text: type"></td>
+                            <td data-bind="text: deadline"></td>
+                            <td><button class="btn btn-primary" data-bind="click: $parent.updateGoal">Edit</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -57,6 +58,6 @@
         </div>
     </div>
     <!-- /.container -->
-
+    <script src="app.js"></script>
 </body>
 </html>

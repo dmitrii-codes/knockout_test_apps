@@ -23,14 +23,16 @@ app.get("/goals", (req, res) => {
     });
 });
 app.post("/goals", (req, res) => {
-    db.goals.insert(req.body, (err, data) => {
-        if (err){
-            res.send(err);
-        } else {
-            console.log("Adding goal..."),
-            res.json(data)
-        }
-    });
+    if(Object.keys(req.body).length !== 0){
+        db.goals.insert(req.body, (err, data) => {
+            if (err){
+                res.send(err);
+            } else {
+                console.log("Adding goal..."),
+                res.json(data)
+            }
+        });
+    }
 });
 app.put("/goals/:id", (req, res) => {
     db.goals.findAndModify(
